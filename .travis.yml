@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- '8'
+cache: yarn:true
+install:
+  - npm install -g codecov
+  - yarn install
+script:
+- yarn test
+- codecov
+- yarn build
+env:
+- CI=false
+deploy:
+  provider: npm
+  email: "razvan@centrifuge.io"
+  on:
+    branches:master

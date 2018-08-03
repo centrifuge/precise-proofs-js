@@ -1,0 +1,21 @@
+# dependency cache
+node_modules
+
+# build
+dist
+lib
+es
+
+# logs
+npm-debug.log
+
+# editor config
+.idea
+*.iml
+
+# OS files
+*.DS_Store
+
+# code coverage
+coverage
+
