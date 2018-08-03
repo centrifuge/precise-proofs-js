@@ -1,0 +1,54 @@
+{
+  "name": "prcise-proofs",
+  "version": "1.0.0",
+  "description": "Precise Proofs validation for javascript(https://github.com/centrifuge/precise-proofs)",
+  "main": "lib/precise-prrof.js",
+  "unpkg": "dist/precise-prrof.js",
+  "module": "es/precise-prrof.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "es",
+    "src"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build:commonjs": "rollup ./src/index.js --file ./lib/precise-prrof.js --format cjs",
+    "build:es": "rollup ./src/index.js --file ./es/precise-prrof.js --format es",
+    "build:umd": "rollup ./src/index.js --file ./dist/precise-prrof.js --format umd --name 'Precise Proofs JS'",
+    "build": "npm run build:commonjs | npm run build:es | npm run build:umd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CentrifugeInc/precise-proofs-js.git"
+  },
+  "keywords": [
+    "precise",
+    "proofs"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CentrifugeInc/precise-proofs-js/issues"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "homepage": "https://github.com/CentrifugeInc/precise-proofs-js#readme",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.4.2",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.4.2",
+    "regenerator-runtime": "^0.12.0",
+    "rollup": "^0.63.5"
+  },
+  "dependencies": {
+    "js-sha256": "^0.9.0",
+    "js-sha3": "^0.7.0"
+  }
+}
