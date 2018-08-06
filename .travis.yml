@@ -11,7 +11,10 @@ script:
 - yarn build
 env:
 - CI=false
+branches:
+  only:
+  - master
+  - add-first-version
 deploy:
   provider: npm
   email: "razvan@centrifuge.io"
-  api_key: "YOUR_AUTH_TOKEN"
