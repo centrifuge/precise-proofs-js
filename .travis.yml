@@ -11,10 +11,8 @@ script:
 - yarn build
 env:
 - CI=false
-branches:
-  only:
-  - master
-  - add-first-version
 deploy:
   provider: npm
   email: "razvan@centrifuge.io"
+  on:
+    branches:add-first-version
