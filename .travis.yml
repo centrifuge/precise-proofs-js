@@ -15,4 +15,4 @@ deploy:
   provider: npm
   email: "razvan@centrifuge.io"
   on:
-    branches:add-first-version
+    branches:master
