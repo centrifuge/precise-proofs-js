@@ -1,25 +1,22 @@
 {
-  "name": "precise-proofs",
+  "name": "prcise-proofs",
   "version": "1.0.0",
   "description": "Precise Proofs validation for javascript(https://github.com/centrifuge/precise-proofs)",
-  "main": "lib/precise-prrof.js",
-  "unpkg": "dist/precise-prrof.js",
-  "module": "es/precise-prrof.js",
+  "main": "dist/precise-proofs.cjs.js",
+  "module": "dist/precise-proof.esm.js",
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "dist",
-    "lib",
-    "es",
     "src"
   ],
   "scripts": {
     "test": "jest",
-    "build:commonjs": "rollup ./src/index.js --file ./lib/precise-prrof.js --format cjs",
-    "build:es": "rollup ./src/index.js --file ./es/precise-prrof.js --format es",
-    "build:umd": "rollup ./src/index.js --file ./dist/precise-prrof.js --format umd --name 'Precise Proofs JS'",
-    "build": "npm run build:commonjs | npm run build:es | npm run build:umd",
+    "build:commonjs": "rollup ./src/index.js --file ./lib/precise-proof.js --format cjs",
+    "build:es": "rollup ./src/index.js --file ./es/precise-proof.js --format es",
+    "build:umd": "rollup ./src/index.js --file ./dist/precise-proof.js --format umd npm install babel-preset-env --save-dev'",
+    "build": "rollup -c",
     "release": "standard-version"
   },
   "repository": {
@@ -44,9 +41,11 @@
     "babel-jest": "^23.4.2",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.7.0",
+    "babelrc-rollup": "^3.0.0",
     "jest": "^23.4.2",
     "regenerator-runtime": "^0.12.0",
     "rollup": "^0.63.5",
+    "rollup-plugin-babel": "^3.0.7",
     "standard-version": "^4.4.0"
   },
   "dependencies": {
