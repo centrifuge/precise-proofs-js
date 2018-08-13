@@ -1,6 +1,6 @@
 {
   "name": "precise-proofs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Precise Proofs validation for javascript(https://github.com/centrifuge/precise-proofs)",
   "main": "dist/precise-proofs.cjs.js",
   "module": "dist/precise-proof.esm.js",
