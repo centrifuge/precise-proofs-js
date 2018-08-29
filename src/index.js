@@ -5,57 +5,70 @@ export const SHA2_256 = "SHA2_256";
 export const SHA3_256 = "SHA3_256";
 
 const hashFunction = (value, hashType) => {
-  switch (hashType) {
-    case SHA2_256: {
-      return Buffer.from(sha2_256.array(value));
+    switch (hashType) {
+        case SHA2_256: {
+            return Buffer.from(sha2_256.array(value));
+        }
+        case SHA3_256: {
+            return Buffer.from(sha3_256.array(value));
+        }
+        default:
+            throw new Error(`Encryption ${hashType} type not supported`);
     }
-    case SHA3_256: {
-      return Buffer.from(sha3_256.array(value));
-    }
-    default:
-      throw new Error(`Encryption ${hashType} type not supported`);
-  }
 };
 
+const toBuffer = (value, type) => {
+    if (type === 'hex' && value.match(/^0x/)) {
+        value = value.slice(2);
+    }
+    return Buffer.from(value, type);
+}
+
+
 const hashTypeSymbol = Symbol("hashType");
+const hashFunctionSymbol = Symbol("hashFunction");
+
 
 export class PreciseProofs {
 
-  constructor(hashType = SHA2_256) {
-    this[hashTypeSymbol] = hashType;
-  }
+    constructor(hashType = "hex", hashFunction = SHA2_256) {
+        this[hashFunctionSymbol] = hashFunction;
+        this[hashTypeSymbol] = hashType;
+    }
 
-  // Checks the format of a field proof
-  static isValidFieldFormat(proof) {
-    return proof && proof.property && proof.value && proof.salt && proof.hashes && Array.isArray(proof.hashes);
-  };
+    // Checks the format of a field proof
+    static isValidFieldFormat(proof) {
+        return proof && proof.property && proof.value && proof.salt && proof.hashes && Array.isArray(proof.hashes);
+    };
 
 
-  // Validates a field proof returns true or false
-  isValidField(proof, rootHash) {
+    // Validates a field proof returns true or false
+    isValidField(proof, rootHash) {
 
-    if (!PreciseProofs.isValidFieldFormat(proof)) throw new Error('Field proof format is invalid, please read the documentation');
+        if (!PreciseProofs.isValidFieldFormat(proof)) throw new Error('Field proof format is invalid, please read the documentation');
 
-    let root = Buffer.from(rootHash, 'base64');
+        let root = toBuffer(rootHash, this[hashTypeSymbol]);
 
-    // Create hash from cocatenated property name, value and salt
-    let proofHash = hashFunction(Buffer.concat([Buffer.from(proof.property), Buffer.from(proof.value), Buffer.from(proof.salt, 'base64')]), this[hashTypeSymbol]);
+        // Create hash from cocatenated property name, value and salt
+        let proofHash = hashFunction(Buffer.concat([toBuffer(proof.property, 'ascii'), toBuffer(proof.value, 'ascii'), toBuffer(proof.salt, this[hashTypeSymbol])]), this[hashFunctionSymbol]);
 
-    // Handle one property/leaf documents
-    if (proof.hashes.length === 0) return root.toString('hex') === proofHash.toString('hex');
+        // Handle one property/leaf documents
+        if (proof.hashes.length === 0) return root.toString('hex') === proofHash.toString('hex');
 
-    let resultHash = proof.hashes.reduce((acc, currentValue) => {
-      if (currentValue.left) {
-        return hashFunction(Buffer.concat([Buffer.from(currentValue.left, 'base64'), acc]), this[hashTypeSymbol]);
-      } else if (currentValue.right) {
-        return hashFunction(Buffer.concat([acc, Buffer.from(currentValue.right, 'base64')]), this[hashTypeSymbol]);
-      } else {
-        throw new Error(`Bad format for hash object: ${currentValue}. It should have a left or a right property`)
-      }
-    }, proofHash);
+        let resultHash = proof.hashes.reduce((acc, currentValue) => {
+            if (currentValue.left) {
+                return hashFunction(Buffer.concat([toBuffer(currentValue.left, this[hashTypeSymbol]), acc]), this[hashFunctionSymbol]);
+                ;
+            } else if (currentValue.right) {
+                return hashFunction(Buffer.concat([acc, toBuffer(currentValue.right, this[hashTypeSymbol])]), this[hashFunctionSymbol]);
+                ;
+            } else {
+                return hashFunction(Buffer.concat([acc, toBuffer(currentValue, this[hashTypeSymbol])].sort(Buffer.compare)), this[hashFunctionSymbol]);
+            }
+        }, proofHash);
 
-    return resultHash.toString('hex') === root.toString('hex');
-  };
+        return resultHash.toString('hex') === root.toString('hex');
+    };
 
 }
 
