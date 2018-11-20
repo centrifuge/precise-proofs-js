@@ -25,7 +25,7 @@ const preciseProofs = new PreciseProofs('base64',SHA3_256);
     "property": "valueA",
     "value": "Example",
     "salt": "d555901541825e5d40612d220142c7428c385c48e0245fd3a40b8e3b64679be1",
-    "sortedHashes": [
+    "sorted_hashes": [
         "60c3dfcdd85fcef1d4826d4695fb5064aa8434d014f2c1547f9398bdf72bdb75",
         "8951fa82c3f5563d88769a9ecb8f6e03b389c06ff64a1b26dc5898cefe95a42f",
         "46d0a998333fc2c8b4cfff1d5e122f7c32ff46f0a4410f63821f45cc02fd3723"
