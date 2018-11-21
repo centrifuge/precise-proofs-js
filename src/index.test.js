@@ -65,7 +65,7 @@ describe('Precise Proofs', () => {
         "property": "valueA",
         "value": "Example",
         "salt": "d555901541825e5d40612d220142c7428c385c48e0245fd3a40b8e3b64679be1",
-        "sortedHashes": [
+        "sorted_hashes": [
             "60c3dfcdd85fcef1d4826d4695fb5064aa8434d014f2c1547f9398bdf72bdb75",
             "8951fa82c3f5563d88769a9ecb8f6e03b389c06ff64a1b26dc5898cefe95a42f",
             "46d0a998333fc2c8b4cfff1d5e122f7c32ff46f0a4410f63821f45cc02fd3723"
@@ -98,7 +98,7 @@ describe('Precise Proofs', () => {
         }).toThrow();
     });
 
-    it('should throw an error if the proof does not have hashes or sortedHashes prop', () => {
+    it('should throw an error if the proof does not have hashes or sorted_hashes prop', () => {
         let proof = {...hexProof};
         delete proof.hashes;
         expect(() => {
@@ -125,9 +125,9 @@ describe('Precise Proofs', () => {
     });
 
 
-    it('should throw an error if the sortedHashes have bad formated hash strings', () => {
+    it('should throw an error if the sorted_hashes have bad formated hash strings', () => {
         let proof = {...hexProof};
-        proof.sortedHashes = [
+        proof.sorted_hashes = [
             {}
         ];
         expect(() => {
@@ -136,12 +136,12 @@ describe('Precise Proofs', () => {
     });
 
 
-    it('should throw an error if is has hashes and sortedHashes at the same time', () => {
+    it('should throw an error if is has hashes and sorted_hashes at the same time', () => {
         let proof = {...hexProof};
         proof.hashes = [
             {}
         ];
-        proof.sortedHashes = [];
+        proof.sorted_hashes = [];
 
         expect(() => {
             (new PreciseProofs()).isValidField(proof, hexRoot);

@@ -41,8 +41,8 @@ export class PreciseProofs {
             proof.property &&
             proof.value &&
             proof.salt &&
-            (proof.hashes || proof.sortedHashes) &&
-            (Array.isArray(proof.hashes) || Array.isArray(proof.sortedHashes))
+            (proof.hashes || proof.sorted_hashes) &&
+            (Array.isArray(proof.hashes) || Array.isArray(proof.sorted_hashes))
         )
     };
 
@@ -50,7 +50,7 @@ export class PreciseProofs {
     isValidField(proof, rootHash) {
 
         if (!PreciseProofs.isValidFieldFormat(proof)) throw new Error('Field proof format is invalid, please read the documentation');
-        if (proof.hashes && proof.sortedHashes) throw new Error('Proof can not have hashes and sortedHashes prop at the same time');
+        if (proof.hashes && proof.sorted_hashes) throw new Error('Proof can not have hashes and sorted_hashes prop at the same time');
 
         let root = toBuffer(rootHash, this[hashTypeSymbol]);
         // Create hash from cocatenated property name, value and salt
@@ -69,10 +69,10 @@ export class PreciseProofs {
                     throw new Error(`Bad format for hash object: ${currentValue}. It should have a left or a right property`)
                 }
             }, proofHash);
-        } else if(proof.sortedHashes) {
+        } else if(proof.sorted_hashes) {
             // Handle one property/leaf documents
-            if (proof.sortedHashes.length === 0) return root.toString('hex') === proofHash.toString('hex');
-            resultHash = proof.sortedHashes.reduce((acc, currentValue) => {
+            if (proof.sorted_hashes.length === 0) return root.toString('hex') === proofHash.toString('hex');
+            resultHash = proof.sorted_hashes.reduce((acc, currentValue) => {
                 if (typeof currentValue === 'string') {
                     return hashFunction(Buffer.concat([acc, toBuffer(currentValue, this[hashTypeSymbol])].sort(Buffer.compare)), this[hashFunctionSymbol]);
                 }  else {
