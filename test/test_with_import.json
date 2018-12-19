@@ -1,0 +1,149 @@
+{
+    "package": null,
+    "syntax": "proto2",
+    "messages": [
+        {
+            "name": "google",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "protobuf",
+                    "fields": [],
+                    "syntax": "proto2",
+                    "options": {
+                        "csharp_namespace": "Google.Protobuf.WellKnownTypes",
+                        "cc_enable_arenas": true,
+                        "go_package": "github.com/golang/protobuf/ptypes/timestamp",
+                        "java_package": "com.google.protobuf",
+                        "java_outer_classname": "TimestampProto",
+                        "java_multiple_files": true,
+                        "objc_class_prefix": "GPB"
+                    },
+                    "messages": [
+                        {
+                            "name": "Timestamp",
+                            "syntax": "proto3",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "type": "int64",
+                                    "name": "seconds",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "int32",
+                                    "name": "nanos",
+                                    "id": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "isNamespace": true
+                }
+            ],
+            "isNamespace": true
+        },
+        {
+            "name": "test",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "ItemCent",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "attribute",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int32",
+                            "name": "cents",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Item",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "name",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "description",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int32",
+                            "name": "numbers",
+                            "id": 3
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "ItemCent",
+                            "name": "cents",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "Items",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "name",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "Item",
+                            "name": "items",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Total",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "name",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "Items",
+                            "name": "items",
+                            "id": 2
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "string",
+                            "name": "itemMap",
+                            "id": 3
+                        }
+                    ]
+                }
+            ],
+            "isNamespace": true
+        }
+    ],
+    "isNamespace": true
+}

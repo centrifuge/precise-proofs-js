@@ -1,4 +1,4 @@
-import {PreciseProofs, SHA3_256} from "./index";
+import {PreciseProofs, SHA3_256} from "../src/index";
 
 describe('Precise Proofs', () => {
 

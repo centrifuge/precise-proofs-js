@@ -1,0 +1,98 @@
+{
+    "package": "test",
+    "syntax": "proto2",
+    "messages": [
+        {
+            "name": "ItemCent",
+            "syntax": "proto3",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "type": "string",
+                    "name": "attribute",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "type": "int32",
+                    "name": "cents",
+                    "id": 2
+                }
+            ]
+        },
+        {
+            "name": "Item",
+            "syntax": "proto3",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "type": "string",
+                    "name": "name",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "type": "string",
+                    "name": "description",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "type": "int32",
+                    "name": "numbers",
+                    "id": 3
+                },
+                {
+                    "rule": "repeated",
+                    "type": "ItemCent",
+                    "name": "cents",
+                    "id": 4
+                }
+            ]
+        },
+        {
+            "name": "Items",
+            "syntax": "proto3",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "type": "string",
+                    "name": "name",
+                    "id": 1
+                },
+                {
+                    "rule": "repeated",
+                    "type": "Item",
+                    "name": "items",
+                    "id": 2
+                }
+            ]
+        },
+        {
+            "name": "Total",
+            "syntax": "proto3",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "type": "string",
+                    "name": "name",
+                    "id": 1
+                },
+                {
+                    "rule": "repeated",
+                    "type": "Items",
+                    "name": "items",
+                    "id": 2
+                },
+                {
+                    "rule": "map",
+                    "type": "Items",
+                    "keytype": "string",
+                    "name": "itemMap",
+                    "id": 3
+                }
+            ]
+        }
+    ],
+    "isNamespace": true
+}
