@@ -1,0 +1,9 @@
+syntax = "proto3";
+package  other.other;
+import "google/protobuf/timestamp.proto";
+message Embedded{
+    string name = 1;
+    bytes  value = 2;
+    google.protobuf.Timestamp  stamp = 4;
+}
+

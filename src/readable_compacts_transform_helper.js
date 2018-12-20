@@ -8,21 +8,21 @@ const findEndBracket = (str) => {
 const itemFilter = (conditions) => {
     return (item) => {
         if (conditions['id'] != undefined) {
-            return item.id == conditions['id'];
+            return item['id'] == conditions['id'];
         } else if (conditions['name'] != undefined) {
-            return item.name == conditions['name'];
+            return item['name'] == conditions['name'];
         }
-        return undefined;
+        return false;
     };
 };
-const getField = (condtions, msgName, msgs) => {
-    let msg = msgs.filter(itemFilter({
-        'name': msgName
-    }))[0];
-    let fields = msg['fields'];
-    let field = msg['fields'].filter(itemFilter(condtions))[0];
+const getField = (conditions, msgName, mappings) => {
+    let fields = mappings.get(msgName);
+    if (fields == undefined) {
+        throw new Error('No ' + msgName + ' definition:');
+    }
+    let field = fields.filter(itemFilter(conditions))[0];
     if (field == undefined) {
-        throw new Error('Message ' + msgName + ' does not has corresponding field with conditions:' + conditions);
+        throw new Error('Message ' + msgName + ' does not has corresponding field with conditions:' + JSON.stringify(conditions));
     }
     return {
         'id': field['id'],
@@ -31,36 +31,46 @@ const getField = (condtions, msgName, msgs) => {
         'name': field['name'],
     };
 };
-const doCompactsReadableMapping = (msgs, msgName, compactComponents) => {
+const getQualifiedMsgName = (msgName, pkgName) => {
+    if (msgName.indexOf('.') == -1) {
+        if (pkgName != '') {
+            msgName = pkgName + '.' + msgName;
+        }
+    }
+    return msgName;
+};
+const doCompactsReadableMapping = (messageFieldsMapping, msgName, pkgName, compactComponents) => {
     let components = [].concat(compactComponents);
     let component = components.shift();
+    let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
         'id': component
-    }, msgName, msgs);
+    }, qualifiedMsgName, messageFieldsMapping);
     let readableName = field['name'];
     if (components.length > 0) {
         if (field['rule'] === 'repeated') {
-            return readableName + '[' + components.shift() + ']' + '.' + doCompactsReadableMapping(msgs, field['type'], components);
+            return readableName + '[' + components.shift() + ']' + '.' + doCompactsReadableMapping(messageFieldsMapping, field['type'], pkgName, components);
         } else {
-            return readableName + '.' + doCompactsReadableMapping(msgs, field['type'], components);
+            return readableName + '.' + doCompactsReadableMapping(messageFieldsMapping, field['type'], pkgName, components);
         }
     }
     return readableName;
 };
-const doReadableCompactsMapping = (msgs, msgName, readableString) => {
+const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, readableString) => {
     let matched = readableString.match(/^\w*/);
     if ((matched == null) || (matched[0] == '')) {
         throw new Error(`${readableString} format error`);
     }
     let remainString = readableString.substring(matched[0].length);
+    let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
         'name': matched[0]
-    }, msgName, msgs);
+    }, qualifiedMsgName, messageFieldsMapping);
     let result = [field['id']];
     while (remainString.length > 0) {
         if (remainString[0] == '.') {
             remainString = remainString.substring(1);
-            return result.concat(doReadableCompactsMapping(msgs, field['type'], remainString));
+            return result.concat(doReadableCompactsMapping(messageFieldsMapping, field['type'], pkgName, remainString));
         } else if (remainString[0] == '[') {
             if (field['rule'] != 'repeated') {
                 throw new Error('Field:' + field['name'] + ' is not a repeated item.');
@@ -79,39 +89,56 @@ const doReadableCompactsMapping = (msgs, msgName, readableString) => {
     }
     return result;
 };
-
+const buildMessageNameToFieldsMapping = (jsonMeta, results) => {
+    let scope = jsonMeta['package'];
+    if ((scope == null) || (scope == undefined)) {
+        buildNestedMessageNameToFieldsMapping('', jsonMeta, results);
+    } else {
+        buildNestedMessageNameToFieldsMapping(scope, jsonMeta, results);
+    }
+};
+const buildNestedMessageNameToFieldsMapping = (scope, jsonMeta, results) => {
+    let outer_scope = scope;
+    let name = jsonMeta['name'];
+    if (name != undefined) {
+        if (scope == '') {
+            outer_scope = name;
+        } else {
+            outer_scope = outer_scope + '.' + name;
+        }
+    }
+    if (jsonMeta['isNamespace'] == true) {
+        let msgs = jsonMeta['messages'];
+        for (let ii in msgs) {
+            buildNestedMessageNameToFieldsMapping(outer_scope, msgs[ii], results);
+        }
+    } else {
+        let msgs = jsonMeta;
+        for (let ii in msgs) {
+            results.set(outer_scope, msgs[ii]);
+        }
+    }
+};
 export class TransformHelper {
     constructor(jsonMetaForProto, packageName, msgName) {
-        //deal with condition when this proto does not import other proto definition
-        if (jsonMetaForProto['package'] == packageName) {
-            this.msgsFormat = jsonMetaForProto.messages;
-        }
-        if (this.msgsFormat == undefined) {
-            this.msgsFormat = jsonMetaForProto.messages.filter(itemFilter({
-                'name': packageName
-            }))[0].messages;
-        }
-        if (this.msgsFormat == undefined){
-            throw new Error('json meta format does not match with provided package name');
-        }
-        let msg = this.msgsFormat.filter(itemFilter({
-            'name': msgName
-        }))[0];
-        if (msg ==undefined){
-            throw new Error('Message:' + msgName + ' does not exist!');
-        }
+        this.messageTypeNameToFields = new Map;
+        buildMessageNameToFieldsMapping(jsonMetaForProto, this.messageTypeNameToFields); 
         this.msgName = msgName;
+        this.pkgName = packageName;
+        if (this.messageTypeNameToFields.get(getQualifiedMsgName(msgName,packageName)) == undefined){
+            throw new Error(`No "Messsge:"  ${msgName} definition`);
+        }
     }
     compactsToReadableString(compactComponents) {
         if (compactComponents.length == 0) {
             return '';
         }
-        return doCompactsReadableMapping(this.msgsFormat, this.msgName, compactComponents);
+        return doCompactsReadableMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, compactComponents);
     }
     readableStringToCompacts(readableString) {
         if (readableString == '') {
             return [];
         }
-        return doReadableCompactsMapping(this.msgsFormat, this.msgName, readableString);
+        return doReadableCompactsMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, readableString);
     }
 }

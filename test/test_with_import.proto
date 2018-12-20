@@ -1,10 +1,12 @@
 syntax = "proto3";
 package  test;
 import "google/protobuf/timestamp.proto";
+import "to_be_import.proto";
 
 message ItemCent{
     string attribute = 1;
     int32  cents = 2;
+    other.other.Embedded value = 3;
 }
 
 message Item {

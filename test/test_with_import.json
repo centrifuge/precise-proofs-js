@@ -46,6 +46,46 @@
             "isNamespace": true
         },
         {
+            "name": "other",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "other",
+                    "fields": [],
+                    "syntax": "proto2",
+                    "messages": [
+                        {
+                            "name": "Embedded",
+                            "syntax": "proto3",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "type": "string",
+                                    "name": "name",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "bytes",
+                                    "name": "value",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "google.protobuf.Timestamp",
+                                    "name": "stamp",
+                                    "id": 4
+                                }
+                            ]
+                        }
+                    ],
+                    "isNamespace": true
+                }
+            ],
+            "isNamespace": true
+        },
+        {
             "name": "test",
             "fields": [],
             "syntax": "proto2",
@@ -65,6 +105,12 @@
                             "type": "int32",
                             "name": "cents",
                             "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "other.other.Embedded",
+                            "name": "value",
+                            "id": 3
                         }
                     ]
                 },
