@@ -1,3 +1,4 @@
+const Long = require('long');
 const findEndBracket = (str) => {
     let index = str.indexOf(']');
     while (str[index - 1] == '\\') {
@@ -39,17 +40,22 @@ const getQualifiedMsgName = (msgName, pkgName) => {
     }
     return msgName;
 };
+
+const comToLong = (com) =>{
+    return Long.fromValue({ low: com, high: 0, unsigned: true });
+};
+
 const doCompactsReadableMapping = (messageFieldsMapping, msgName, pkgName, compactComponents) => {
     let components = [].concat(compactComponents);
     let component = components.shift();
     let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
-        'id': component
+        'id': component.toInt()
     }, qualifiedMsgName, messageFieldsMapping);
     let readableName = field['name'];
     if (components.length > 0) {
         if (field['rule'] === 'repeated') {
-            return readableName + '[' + components.shift() + ']' + '.' + doCompactsReadableMapping(messageFieldsMapping, field['type'], pkgName, components);
+            return readableName + '[' + components.shift().toString() + ']' + '.' + doCompactsReadableMapping(messageFieldsMapping, field['type'], pkgName, components);
         } else {
             return readableName + '.' + doCompactsReadableMapping(messageFieldsMapping, field['type'], pkgName, components);
         }
@@ -57,8 +63,8 @@ const doCompactsReadableMapping = (messageFieldsMapping, msgName, pkgName, compa
     return readableName;
 };
 const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, readableString) => {
-    let matched = readableString.match(/^\w*/);
-    if ((matched == null) || (matched[0] == '')) {
+    let matched = readableString.match(/^\w+/);
+    if (matched == null) {
         throw new Error(`${readableString} format error`);
     }
     let remainString = readableString.substring(matched[0].length);
@@ -66,7 +72,7 @@ const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, reada
     let field = getField({
         'name': matched[0]
     }, qualifiedMsgName, messageFieldsMapping);
-    let result = [field['id']];
+    let result = [comToLong(field['id'])];
     while (remainString.length > 0) {
         if (remainString[0] == '.') {
             remainString = remainString.substring(1);
@@ -77,8 +83,8 @@ const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, reada
             }
             let indexOfClose = findEndBracket(remainString);
             let str = remainString.substring(1, indexOfClose);
-            if (str.match(/^[0-9]*$/)) {
-                result = result.concat([parseInt(str)]);
+            if (str.match(/^[0-9]+$/)) {
+                result = result.concat([comToLong(parseInt(str))]);
             } else {
                 throw new Error(str + ' is not a valid index for repeated item.');
             }
@@ -122,7 +128,7 @@ const buildNestedMessageNameToFieldsMapping = (scope, jsonMeta, results) => {
 export class TransformHelper {
     constructor(jsonMetaForProto, packageName, msgName) {
         this.messageTypeNameToFields = new Map;
-        buildMessageNameToFieldsMapping(jsonMetaForProto, this.messageTypeNameToFields); 
+        buildMessageNameToFieldsMapping(jsonMetaForProto, this.messageTypeNameToFields);
         this.msgName = msgName;
         this.pkgName = packageName;
         if (this.messageTypeNameToFields.get(getQualifiedMsgName(msgName,packageName)) == undefined){
