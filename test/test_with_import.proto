@@ -27,4 +27,5 @@ message Total {
         map<string, Items> itemMap = 3 ;
         map<bytes, Items> itemMap2 = 4 ;
         map<uint64, Items> itemMap3 = 5 ;
+        map<int64, Items> itemMap4 = 6 ;
 }

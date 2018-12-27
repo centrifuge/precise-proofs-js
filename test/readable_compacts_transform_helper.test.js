@@ -75,11 +75,14 @@ describe('Transform Helper', () => {
     let readableNameForStringMap='itemMap[abc].name';
     let compactsForStringMap = comsToLongs([3, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x616263,1]);
 
-    let readableNameForBytesMap='itemMap2[0xabbccd]';
-    let compactsForBytesMap = comsToLongs([4, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0xabbccd]);
+    let readableNameForBytesMap='itemMap2[0xabbccd].name';
+    let compactsForBytesMap = comsToLongs([4, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0xabbccd,1]);
 
-    let readableNameForUint64Map='itemMap3[567]';
-    let compactsForUint64Map = comsToLongs([5, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x353637]);
+    let readableNameForUint64Map='itemMap3[567].name';
+    let compactsForUint64Map = comsToLongs([5,567,1]);
+
+    let readableNameForInt64Map='itemMap4[-4567].name';
+    let compactsForInt64Map = [comToLong(6), Long.fromString('-4567'),comToLong(1)];
 
     let readableNameWithImport = 'items[513].items[2].cents[5].value.name';
     let compactsWithImport = comsToLongs([2, 513, 2, 2, 4, 5, 3, 1]);
@@ -117,9 +120,14 @@ describe('Transform Helper', () => {
     
     });
 
-    it('int map should work', () => {
+    it('uint64 map should work', () => {
         expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).compactsToReadableString(compactsForUint64Map)).toEqual(readableNameForUint64Map);
         expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).readableStringToCompacts(readableNameForUint64Map)).toEqual(compactsForUint64Map);
+    });
+
+    it('int64 map should work', () => {
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).compactsToReadableString(compactsForInt64Map)).toEqual(readableNameForInt64Map);
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).readableStringToCompacts(readableNameForInt64Map)).toEqual(compactsForInt64Map);
     });
 
     it('should transform successfully without importing', () => {

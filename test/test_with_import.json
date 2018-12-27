@@ -198,6 +198,13 @@
                             "keytype": "uint64",
                             "name": "itemMap3",
                             "id": 5
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "int64",
+                            "name": "itemMap4",
+                            "id": 6
                         }
                     ]
                 }

@@ -98,8 +98,7 @@ const doCompactsReadableMapping = (messageFieldsMapping, msgName, pkgName, compa
         case 'uint32':
         case 'fixed64':
         case 'fixed32':
-            tmp = first16ComsToString(components,(com)=>{ return hextoString(com.toString(16));});
-            readableName = readableName + '[' + tmp + ']';
+            readableName = readableName + '[' + components.shift().toString() + ']';
             break;  
         default:
             throw new Error(`Invalid key type: ${field['keytype']}`);
@@ -196,11 +195,13 @@ const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, reada
             case 'int32':
             case 'sint64':
             case 'sint32':
+                result.push(Long.fromString(str,false));
+                break;
             case 'uint64':
             case 'uint32':
             case 'fixed64':
             case 'fixed32':
-                result = result.concat(decimalStrToComponents(str));
+                result.push(Long.fromString(str,true));
                 break;
             default:
                 throw new Error(`Invalid key type: ${field['keytype']}`);
