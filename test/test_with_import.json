@@ -184,6 +184,20 @@
                             "keytype": "string",
                             "name": "itemMap",
                             "id": 3
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "bytes",
+                            "name": "itemMap2",
+                            "id": 4
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "uint64",
+                            "name": "itemMap3",
+                            "id": 5
                         }
                     ]
                 }

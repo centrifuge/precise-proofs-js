@@ -4,10 +4,8 @@ import {
 
 import {PreciseProofs, SHA3_256} from "../src/index";
 
-
     let transformHashes = (hashes) =>{
         let result = new Array();
-
         for (let item in hashes)
         {
            if (hashes[item].left != null){
@@ -20,7 +18,10 @@ import {PreciseProofs, SHA3_256} from "../src/index";
     } 
     let Long = require('long');
     let comToLong = (com) =>{
-        return Long.fromValue({ low: com, high: 0, unsigned: true })
+        return new Long(com, 0, true)
+    }
+    let pairsToLong = (low, high) =>{
+        return new Long(low, high, true)
     }
     let comsToLongs = (coms) => {
         let result = new Array
@@ -71,6 +72,15 @@ describe('Transform Helper', () => {
     let readableName = 'items[513].items[2].cents[5].cents';
     let compacts = comsToLongs([2, 513, 2, 2, 4, 5, 2]);
 
+    let readableNameForStringMap='itemMap[abc].name';
+    let compactsForStringMap = comsToLongs([3, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x616263,1]);
+
+    let readableNameForBytesMap='itemMap2[0xabbccd]';
+    let compactsForBytesMap = comsToLongs([4, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0xabbccd]);
+
+    let readableNameForUint64Map='itemMap3[567]';
+    let compactsForUint64Map = comsToLongs([5, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x353637]);
+
     let readableNameWithImport = 'items[513].items[2].cents[5].value.name';
     let compactsWithImport = comsToLongs([2, 513, 2, 2, 4, 5, 3, 1]);
 
@@ -93,6 +103,23 @@ describe('Transform Helper', () => {
     it('should transform successfully when importing other proto def', () => {
         expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).compactsToReadableString(compactsWithImport)).toEqual(readableNameWithImport)
         expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).readableStringToCompacts(readableNameWithImport)).toEqual(compactsWithImport);
+    });
+
+    it('string map should work', () => {
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).compactsToReadableString(compactsForStringMap)).toEqual(readableNameForStringMap)
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).readableStringToCompacts(readableNameForStringMap)).toEqual(compactsForStringMap);
+    
+    });
+    
+    it('bytes map should work', () => {
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).compactsToReadableString(compactsForBytesMap)).toEqual(readableNameForBytesMap);  
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).readableStringToCompacts(readableNameForBytesMap)).toEqual(compactsForBytesMap);
+    
+    });
+
+    it('int map should work', () => {
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).compactsToReadableString(compactsForUint64Map)).toEqual(readableNameForUint64Map);
+        expect((new TransformHelper(jsonMetaFormat, packageName, msgName)).readableStringToCompacts(readableNameForUint64Map)).toEqual(compactsForUint64Map);
     });
 
     it('should transform successfully without importing', () => {
