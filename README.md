@@ -112,21 +112,21 @@ const base64PreciseProofs = new PreciseProofs('base64');
 const base64Valid = base64PreciseProofs.isValidField(base64Proof, base64RootHash)
 // base64Valid  === true 
 ```
-## About Transformation Between Compacts and Readable Name of Proof
-TransformHelper can be used to achieve this target
+## About Transformation Between Compact Property and Literal String of Proof
+PropertyTransformHelper can be used to achieve this target
 First of all, you shoud install protobufjs to generate json definition from proto file.
  
 ```
 pbjs example.proto -t json -p "/usr/local/include" -o examples.json
 ```
-To transform between Compacts format and Readable Name, you should provide generated json file and you should know the package name and the root message type defined in proto file.
+To transform between Compact Property and Literal String, you should provide generated json file and you should know the package name and the root message type defined in proto file.
 
 ```
-import {TransformHelper} from "readable_compacts_transform_helper";
+import {PropertyTransformHelper} from "PropertyTransformHelper";
 var jsonFormat = require('examples.json');
-var helper = new TransformHelper(jsonFormat,'documents','ExampleDocument');
-helper.compactsToReadableString([3]);
-helper.readableStringToCompacts('value_bytes1')
+var helper = new PropertyTransformHelper(jsonFormat,'documents','ExampleDocument');
+helper.compactPropertyToLiteral([3]);
+helper.literalToPropertyCompact('value_bytes1')
 ```
 
 ### Missing features

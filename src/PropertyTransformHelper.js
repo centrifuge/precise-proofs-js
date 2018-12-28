@@ -27,7 +27,7 @@ const getField = (conditions, msgName, mappings) => {
     }
     let field = fields.filter(itemFilter(conditions))[0];
     if (field == undefined) {
-        throw new Error('Message ' + msgName + ' does not has corresponding field with conditions:' + JSON.stringify(conditions));
+        throw new Error('Message ' + msgName + ' does not have corresponding field with conditions:' + JSON.stringify(conditions));
     }
     return {
         'id': field['id'],
@@ -66,29 +66,29 @@ const first16ComsToString = (coms, transform)=>{
     return result;
 };
 
-const doCompactsReadableMapping = (messageFieldsMapping, msgName, pkgName, compactComponents) => {
-    if (compactComponents.length == 0){
+const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName, compactPropertyComponents) => {
+    if (compactPropertyComponents.length == 0){
         return '';
     }
-    let components = [].concat(compactComponents);
+    let components = [].concat(compactPropertyComponents);
     let component = components.shift();
     let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
         'id': component.toInt()
     }, qualifiedMsgName, messageFieldsMapping);
-    let readableName = field['name'];
+    let literal = field['name'];
     let tmp = '';
     if (field['rule'] === 'repeated') {
-        readableName = readableName + '[' + components.shift().toString() + ']';
+        literal = literal + '[' + components.shift().toString() + ']';
     } else if (field['rule'] === 'map'){
         switch (field['keytype']){
         case 'string':
             tmp = first16ComsToString(components,(com)=>{ return hextoString(com.toString(16));});
-            readableName =  readableName + '[' + tmp + ']'; 
+            literal =  literal + '[' + tmp + ']'; 
             break;
         case 'bytes':
             tmp = first16ComsToString(components,(com)=>{ return com.toString(16);});
-            readableName = readableName + '[' + '0x' + tmp + ']';
+            literal = literal + '[' + '0x' + tmp + ']';
             break;
         case 'int64':
         case 'int32':
@@ -98,17 +98,17 @@ const doCompactsReadableMapping = (messageFieldsMapping, msgName, pkgName, compa
         case 'uint32':
         case 'fixed64':
         case 'fixed32':
-            readableName = readableName + '[' + components.shift().toString() + ']';
+            literal = literal + '[' + components.shift().toString() + ']';
             break;  
         default:
             throw new Error(`Invalid key type: ${field['keytype']}`);
         }
     }
-    let remains = doCompactsReadableMapping(messageFieldsMapping, field['type'], pkgName, components);
+    let remains = doCompactPropertyLiteralMapping(messageFieldsMapping, field['type'], pkgName, components);
     if (remains !='')  {
-        readableName = readableName + '.' + remains;
+        literal = literal + '.' + remains;
     }   
-    return readableName;
+    return literal;
 };
 
 const strToComponents = (str) =>{
@@ -158,15 +158,15 @@ const hexStrToComponents = (str) =>{
     return result; 
 };
 
-const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, readableString) => {
-    if (readableString.length  == 0){
+const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName, literal) => {
+    if (literal.length  == 0){
         return [];
     }
-    let matched = readableString.match(/^\w+/);
+    let matched = literal.match(/^\w+/);
     if (matched == null) {
-        throw new Error(`"${readableString}": format error`);
+        throw new Error(`"${literal}": format error`);
     }
-    let remainString = readableString.substring(matched[0].length);
+    let remainString = literal.substring(matched[0].length);
     let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
         'name': matched[0]
@@ -213,7 +213,7 @@ const doReadableCompactsMapping = (messageFieldsMapping, msgName, pkgName, reada
     if (remainString[0] == '.') {
         remainString = remainString.substring(1);
     }
-    result =  result.concat(doReadableCompactsMapping(messageFieldsMapping, field['type'], pkgName, remainString));
+    result =  result.concat(doLiteralCompactPropertyMapping(messageFieldsMapping, field['type'], pkgName, remainString));
     return result;
 };
 
@@ -249,7 +249,7 @@ const buildNestedMessageNameToFieldsMapping = (scope, jsonMeta, results) => {
     }
 };
 
-export class TransformHelper {
+export class PropertyTransformHelper {
     constructor(jsonMetaForProto, packageName, msgName) {
         this.messageTypeNameToFields = new Map;
         buildMessageNameToFieldsMapping(jsonMetaForProto, this.messageTypeNameToFields);
@@ -259,16 +259,16 @@ export class TransformHelper {
             throw new Error(`No "Messsge:"  ${msgName} definition`);
         }
     }
-    compactsToReadableString(compactComponents) {
-        if (compactComponents.length == 0) {
+    compactPropertyToLiteral(compactPropertyComponents) {
+        if (compactPropertyComponents.length == 0) {
             return '';
         }
-        return doCompactsReadableMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, compactComponents);
+        return doCompactPropertyLiteralMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, compactPropertyComponents);
     }
-    readableStringToCompacts(readableString) {
-        if (readableString == '') {
+    literalToCompactProperty(literal) {
+        if (literal == '') {
             return [];
         }
-        return doReadableCompactsMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, readableString);
+        return doLiteralCompactPropertyMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, literal);
     }
 }
