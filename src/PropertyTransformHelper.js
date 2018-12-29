@@ -127,21 +127,6 @@ const strToComponents = (str) =>{
     return result;
 };
 
-const decimalStrToComponents = (str) =>{
-    let bf = ByteBuffer.fromUTF8(str);
-    if (bf.limit > 128){
-        throw new Error(str + ' is too long as a key to map.');
-    }
-    bf.prepend(Array(128-bf.limit).fill(0));
-    let result = Array(0);
-    while (bf.offset < bf.limit){
-        let tmp = bf.readLong();
-        tmp.unsigned = true;
-        result.push(tmp);
-    }
-    return result;
-};
-
 const hexStrToComponents = (str) =>{
     if (str.match(/^0x/)){
         str = str.substring(2);
@@ -248,13 +233,40 @@ const buildNestedMessageNameToFieldsMapping = (scope, jsonMeta, results) => {
         }
     }
 };
-
+const removeCompactPrefix = (prefix, coms) =>{
+    if (coms.length <= prefix.length){
+        throw new Error('compactProperty\'s length should be bigger than prefix\'length ');
+    }
+    for(let ii = 0; ii < prefix.length; ii++)
+    {
+        if (prefix[ii] != coms[ii]){
+            throw new Error(`compactProperty ${coms} does not start with compact prefix ${prefix}`);
+        }
+    }
+    let result = [].concat(coms);
+    result.splice(0,prefix.length);
+    return result;
+};
+const removeLiteralPrefix = (prefix, literal) =>{
+    if (! literal.startsWith(prefix)){
+        throw new Error(`Literal:${literal} does not start with prefix: ${prefix} `);
+    }
+    return literal.substring(prefix.length+1);
+};
 export class PropertyTransformHelper {
-    constructor(jsonMetaForProto, packageName, msgName) {
+    constructor(jsonMetaForProto, packageName, msgName, parentPrefixLiteral, parentPrefixCompact) {
         this.messageTypeNameToFields = new Map;
         buildMessageNameToFieldsMapping(jsonMetaForProto, this.messageTypeNameToFields);
         this.msgName = msgName;
         this.pkgName = packageName;
+        this.parentPrefixLiteral = parentPrefixLiteral;
+        this.parentPrefixCompact = parentPrefixCompact;
+        if (this.parentPrefixLiteral == undefined){
+            this.parentPrefixLiteral ='';
+        }
+        if (this.parentPrefixCompact == undefined){
+            this.parentPrefixCompact =[];
+        }
         if (this.messageTypeNameToFields.get(getQualifiedMsgName(msgName,packageName)) == undefined){
             throw new Error(`No "Messsge:"  ${msgName} definition`);
         }
@@ -263,12 +275,20 @@ export class PropertyTransformHelper {
         if (compactPropertyComponents.length == 0) {
             return '';
         }
-        return doCompactPropertyLiteralMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, compactPropertyComponents);
+        let remainComs = compactPropertyComponents;
+        if (this.parentPrefixCompact.length != 0){
+            remainComs = removeCompactPrefix(this.parentPrefixCompact, compactPropertyComponents);
+        }
+        return doCompactPropertyLiteralMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, remainComs);
     }
     literalToCompactProperty(literal) {
         if (literal == '') {
             return [];
         }
-        return doLiteralCompactPropertyMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, literal);
+        let remainLiteral = literal;
+        if (this.parentPrefixLiteral.length != 0){
+            remainLiteral = removeLiteralPrefix(this.parentPrefixLiteral, literal);
+        }
+        return doLiteralCompactPropertyMapping(this.messageTypeNameToFields, this.msgName, this.pkgName, remainLiteral);
     }
 }

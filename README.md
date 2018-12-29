@@ -124,7 +124,7 @@ To transform between Compact Property and Literal String, you should provide gen
 ```
 import {PropertyTransformHelper} from "PropertyTransformHelper";
 var jsonFormat = require('examples.json');
-var helper = new PropertyTransformHelper(jsonFormat,'documents','ExampleDocument');
+var helper = new PropertyTransformHelper(jsonFormat,'documents','ExampleDocument', '', []);
 helper.compactPropertyToLiteral([3]);
 helper.literalToPropertyCompact('value_bytes1')
 ```
