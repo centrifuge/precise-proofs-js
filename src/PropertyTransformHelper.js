@@ -35,6 +35,7 @@ const getField = (conditions, msgName, mappings) => {
         'rule': field['rule'],
         'name': field['name'],
         'keytype':field['keytype'],
+        'options':field['options'],
     };
 };
 
@@ -56,9 +57,9 @@ const hextoString = (hex) => {
     return bf.readString(bf.limit);
 };
 
-const first16ComsToString = (coms, transform)=>{
+const firstComsToString = (nums, coms, transform)=>{
     let result ='';
-    for (let ii = 0; ii <16 ; ii++){
+    for (let ii = 0; ii <nums ; ii++){
         let component = coms.shift();
         if (component.toInt() != 0){
             result = result + transform(component);                       }
@@ -81,13 +82,16 @@ const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName,
     if (field['rule'] === 'repeated') {
         literal = literal + '[' + components.shift().toString() + ']';
     } else if (field['rule'] === 'map'){
+        let comsLength = 16;
         switch (field['keytype']){
         case 'string':
-            tmp = first16ComsToString(components,(com)=>{ return hextoString(com.toString(16));});
+            comsLength = field['options'][`${maxKeyLengthOptionName}`]/8;
+            tmp = firstComsToString(comsLength,components,(com)=>{ return hextoString(com.toString(16));});
             literal =  literal + '[' + tmp + ']'; 
             break;
         case 'bytes':
-            tmp = first16ComsToString(components,(com)=>{ return com.toString(16);});
+            comsLength = field['options'][`${maxKeyLengthOptionName}`]/8;
+            tmp = firstComsToString(comsLength,components,(com)=>{ return com.toString(16);});
             literal = literal + '[' + '0x' + tmp + ']';
             break;
         case 'int64':
@@ -111,8 +115,8 @@ const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName,
     return literal;
 };
 
-const strToComponents = (str) =>{
-    if (str.length > 128){
+const strToComponents = (str, maxLength) =>{
+    if (str.length > maxLength){
         throw new Error(str + ' is too long as a key to map.');
     }
     let result = Array(0);
@@ -120,29 +124,29 @@ const strToComponents = (str) =>{
     for (let ii = 0; ii < str.length; ii++){
         tmp.push(str[ii].charCodeAt());
     }
-    tmp = Array(128-tmp.length).fill(0).concat(tmp);
+    tmp = Array(maxLength-tmp.length).fill(0).concat(tmp);
     while (tmp.length >= 8){
         result.push(ByteBuffer.fromBinary(tmp.splice(0,8)).readUint64());
     }
     return result;
 };
 
-const hexStrToComponents = (str) =>{
+const hexStrToComponents = (str, maxLength) =>{
     if (str.match(/^0x/)){
         str = str.substring(2);
     }
     let bf = ByteBuffer.fromHex(str);
-    if (bf.limit > 128){
+    if (bf.limit > maxLength){
         throw new Error(str + ' is too long as a key to map.');
     }
-    bf.prepend(Array(128-bf.limit).fill(0));
+    bf.prepend(Array(maxLength - bf.limit).fill(0));
     let result = Array(0);
     while (bf.offset < bf.limit){
         result.push(bf.readUint64());
     }
     return result; 
 };
-
+const maxKeyLengthOptionName = '(proofs.key_max_length)';
 const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName, literal) => {
     if (literal.length  == 0){
         return [];
@@ -171,10 +175,10 @@ const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName,
         else if (field['rule'] === 'map'){
             switch (field['keytype']){
             case 'string':
-                result = result.concat(strToComponents(str));
+                result = result.concat(strToComponents(str,field['options'][`${maxKeyLengthOptionName}`]));
                 break;
             case 'bytes':
-                result = result.concat(hexStrToComponents(str));
+                result = result.concat(hexStrToComponents(str,field['options'][`${maxKeyLengthOptionName}`]));
                 break;
             case 'int64':
             case 'int32':

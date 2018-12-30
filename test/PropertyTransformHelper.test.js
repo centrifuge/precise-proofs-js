@@ -97,6 +97,7 @@ describe('Property Transform Helper', () => {
     let compactPropertyWithErrorPrefix = comsToLongs([55, 77]).concat(compactProperty);
 
     let literalForStringMap='itemMap[abc].name';
+    let longKeyLiteralForStringMap = 'itemMap[abcasdasdahjdfdhsjhadhahdahdajsdjahjfssdjjjhshfshjsjfhsjahashdakjsdhadjkasdhashdahsdhaksdkhsajkdhajasdhajsdkjakjsdjadsjadjadjjajahadhsjdahjasdhahd].name';
     let compactPropertyForStringMap = comsToLongs([3, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x616263,1]);
 
     let literalForBytesMap='itemMap2[0xabbccd].name';
@@ -149,13 +150,17 @@ describe('Property Transform Helper', () => {
     it('string map should work', () => {
         expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(compactPropertyForStringMap)).toEqual(literalForStringMap)
         expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(literalForStringMap)).toEqual(compactPropertyForStringMap);
-    
+    });
+
+    it('too long key string map should throw', () => {
+        expect(() => {
+           (new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(longKeyLiteralForStringMap);
+        }).toThrow();
     });
     
     it('bytes map should work', () => {
         expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(compactPropertyForBytesMap)).toEqual(literalForBytesMap);  
-        expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(literalForBytesMap)).toEqual(compactPropertyForBytesMap);
-    
+        expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(literalForBytesMap)).toEqual(compactPropertyForBytesMap);    
     });
 
     it('uint64 map should work', () => {

@@ -46,6 +46,109 @@
             "isNamespace": true
         },
         {
+            "name": "proofs",
+            "fields": [],
+            "syntax": "proto2",
+            "options": {
+                "go_package": "proofspb",
+                "java_multiple_files": true,
+                "java_outer_classname": "ProofProto",
+                "java_package": "com.proofs"
+            },
+            "messages": [
+                {
+                    "name": "MerkleHash",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "left",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "right",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Proof",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "readable_name",
+                            "id": 7,
+                            "oneof": "property"
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "FieldNums",
+                            "name": "compact_name",
+                            "id": 9,
+                            "oneof": "property"
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "value",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "salt",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "hash",
+                            "id": 6
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "MerkleHash",
+                            "name": "hashes",
+                            "id": 4
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "bytes",
+                            "name": "sorted_hashes",
+                            "id": 5
+                        }
+                    ],
+                    "oneofs": {
+                        "property": [
+                            7,
+                            9
+                        ]
+                    }
+                },
+                {
+                    "name": "FieldNums",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "uint64",
+                            "name": "components",
+                            "id": 1,
+                            "options": {
+                                "packed": true
+                            }
+                        }
+                    ]
+                }
+            ],
+            "isNamespace": true
+        },
+        {
             "name": "other",
             "fields": [],
             "syntax": "proto2",
@@ -183,14 +286,20 @@
                             "type": "Items",
                             "keytype": "string",
                             "name": "itemMap",
-                            "id": 3
+                            "id": 3,
+                            "options": {
+                                "(proofs.key_max_length)": 128
+                            }
                         },
                         {
                             "rule": "map",
                             "type": "Items",
                             "keytype": "bytes",
                             "name": "itemMap2",
-                            "id": 4
+                            "id": 4,
+                            "options": {
+                                "(proofs.key_max_length)": 128
+                            }
                         },
                         {
                             "rule": "map",
