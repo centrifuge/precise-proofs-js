@@ -119,7 +119,7 @@ First of all, you shoud install protobufjs to generate json definition from prot
 ```
 pbjs example.proto -t json -p "/usr/local/include" -o examples.json
 ```
-To transform between Compact Property and Literal String, you should provide generated json file and you should know the package name and the root message type defined in proto file.
+To transform between Compact Property and Literal String, you should provide generated json file and you should provide the package name and the message type defined in proto file.
 
 ```
 import {PropertyTransformHelper} from "PropertyTransformHelper";
