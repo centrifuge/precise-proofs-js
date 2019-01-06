@@ -3,6 +3,7 @@ import sha2_256 from "js-sha256";
 
 export const SHA2_256 = "SHA2_256";
 export const SHA3_256 = "SHA3_256";
+export {PropertyTransformHelper} from "./PropertyTransformHelper";
 
 const hashFunction = (value, hashType) => {
     switch (hashType) {
@@ -86,10 +87,3 @@ export class PreciseProofs {
     };
 
 }
-
-
-
-
-
-
-

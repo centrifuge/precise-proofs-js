@@ -26,10 +26,10 @@ message Total {
         string name = 1 ;
         repeated Items items = 2;
         map<string, Items> itemMap = 3 [
-          (proofs.key_max_length) = 8
+          (proofs.key_length) = 8
         ];
         map<bytes, Items> itemMap2 = 4 [
-          (proofs.key_max_length) = 8
+          (proofs.key_length) = 8
         ];
         map<uint64, Items> itemMap3 = 5 ;
         map<int64, Items> itemMap4 = 6 ;

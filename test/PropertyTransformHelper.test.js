@@ -1,8 +1,4 @@
-import {
-    PropertyTransformHelper
-} from "../src/PropertyTransformHelper";
-
-import {PreciseProofs, SHA3_256} from "../src/index";
+import {PreciseProofs, PropertyTransformHelper} from "../src/index";
 
     let transformHashes = (hashes) =>{
         let result = new Array();
@@ -16,7 +12,7 @@ import {PreciseProofs, SHA3_256} from "../src/index";
         }
         return result
     }
-  
+
 describe('Property Transform Helper', () => {
 
     let ProtoBuf = require('protobufjs');
@@ -31,10 +27,10 @@ describe('Property Transform Helper', () => {
     let proofHexStrWithLiteralAndParentPrefix = "120856616c75654441411a20571fb61b6695c7a4808b341aa1f57cf6503f82d120ad6bd8f16d983f5d7b04f422220a20236739850eb7051fddcfc0fea5fa7dbdeab7511a7a8df223edadf578eebd7b0622221220e308580f3f5eb4155fe551db79a5327673384eb3e9abfd05ff61e55991d791df22220a20e7eb8e592e988615186b903387f61fd8761ad50419fead5ee4640419681b6ba83a206f72672e707265636973652e76616c7565442e76616c7565412e76616c756541";
 
     let targetCompactProperty = [0,0,0,4,  0,0,0,1,  0,0,0,1];
-    let proofBuild = ProtoBuf.loadJson(require('./proof.json')).build("proofs.Proof");
-    let proofWithLiteral = proofBuild.decodeHex(proofHexStrWithLiteral);
-    let proofWithLiteralAndParentPrefix = proofBuild.decodeHex(proofHexStrWithLiteralAndParentPrefix);
-    let proofWithCompactProperty = proofBuild.decodeHex(proofHexStrWithCompactProperty);
+    let proofParser = ProtoBuf.loadJson(require('./proof.json')).build("proofs.Proof");
+    let proofWithLiteral = proofParser.decodeHex(proofHexStrWithLiteral);
+    let proofWithLiteralAndParentPrefix = proofParser.decodeHex(proofHexStrWithLiteralAndParentPrefix);
+    let proofWithCompactProperty = proofParser.decodeHex(proofHexStrWithCompactProperty);
 
     let hexProof = {
         "property": new PropertyTransformHelper(require('./examples.json'), "documents", "NestedRepeatedDocument").compactPropertyToLiteral([0,0,0,4,0,0,0,1,0,0,0,1]),
@@ -64,7 +60,7 @@ describe('Property Transform Helper', () => {
 //        expect(proofWithCompactProperty.compact_name.components).toEqual(targetCompactProperty);
 //    });
 
-    it('when proof contain parent prifix should transform literal to compact correctly if parent prefix is provided', () => {
+    it('when proof contains parent prefix should transform literal to compact correctly if parent prefix is provided', () => {
         let tmpLiteral = proofWithLiteralAndParentPrefix.readable_name ;
         expect(new PropertyTransformHelper(require('./examples.json'), "documents", "NestedRepeatedDocument", "org.precise").literalToCompactProperty(tmpLiteral)).toEqual(targetCompactProperty)
         expect((new PreciseProofs()).isValidField(hexProofWithParentPrefix, rootHashWithParentPrefix)).toEqual(true)
@@ -85,7 +81,7 @@ describe('Property Transform Helper', () => {
 
     let literalForStringMap2='itemMap[abc].name';
     let compactPropertyForStringMap2 = [0,0,0,3,  0,0,0,0,0,0x61,0x62,0x63,  0,0,0,1];
-    
+
     let literalForStringMap='itemMap[a测试].name';
     let longKeyLiteralForStringMap = 'itemMap[abcasdasdahjdfdhsjhadhahdahdajsdjahjfssdjjjhshfshjsjfhsjahashdakjsdhadjkasdhashdahsdhaksdkhsajkdhajasdhajsdkjakjsdjadsjadjadjjajahadhsjdahjasdhahd].name';
     let compactPropertyForStringMap = [0,0,0,3,   0,0x61,0xe6,0xb5,0x8b,0xe8,0xaf,0x95,  0,0,0,1];
@@ -128,7 +124,7 @@ describe('Property Transform Helper', () => {
         expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName,literalPrefix,compactPrefix)).literalToCompactProperty(literalWithPrefix)).toEqual(compactProperty);
     });
 
-    it('should throw if contian error prefix', () => {
+    it('should throw if contains incorrect prefix', () => {
         expect(() => {
             (new PropertyTransformHelper(jsonMetaFormat, packageName, msgName,literalPrefix,compactPrefix)).compactPropertyToLiteral(compactPropertyWithErrorPrefix);
         }).toThrow();
@@ -139,8 +135,9 @@ describe('Property Transform Helper', () => {
 
     it('string map should work', () => {
         expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(compactPropertyForStringMap)).toEqual(literalForStringMap);
-        expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(compactPropertyForStringMap2)).toEqual(literalForStringMap2);
         expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(literalForStringMap)).toEqual(compactPropertyForStringMap);
+        expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(compactPropertyForStringMap2)).toEqual(literalForStringMap2);
+        expect((new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(literalForStringMap2)).toEqual(compactPropertyForStringMap2);
     });
 
     it('too long key string map should throw', () => {
@@ -181,25 +178,25 @@ describe('Property Transform Helper', () => {
         }).toThrow();
     });
 
-    it('non exist field id case 1 should throw', () => {
+    it('non-existed field id case 1 should throw', () => {
         expect(() => {
             (new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(errorCompactProperty1);
         }).toThrow();
     });
 
-    it('non exist field id case2 should throw', () => {
+    it('non-existed field id case2 should throw', () => {
         expect(() => {
             (new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).compactPropertyToLiteral(errorCompactProperty2);
         }).toThrow();
     });
 
-    it('non exist field name case 1 should throw', () => {
+    it('non-existed field name case 1 should throw', () => {
         expect(() => {
             (new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(errorLiteral1);
         }).toThrow();
     });
 
-    it('non exist field name case 2 should throw', () => {
+    it('non-existed field name case 2 should throw', () => {
         expect(() => {
             (new PropertyTransformHelper(jsonMetaFormat, packageName, msgName)).literalToCompactProperty(errorLiteral2);
         }).toThrow();

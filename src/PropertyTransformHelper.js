@@ -53,11 +53,11 @@ const readString = (length, compacts) =>{
     let i = compacts.offset;
     let j = compacts.offset;
     while (buf[i] == 0){
-        i++; 
+        i++;
     }
     compacts.offset = i;
     return compacts.readString(length - i + j, ByteBuffer.METRICS_BYTES);
-}; 
+};
 
 const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName, compacts) => {
     if (compacts.remaining() == 0){
@@ -110,7 +110,7 @@ const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName,
     return literal;
 };
 
-const maxKeyLengthOptionName = '(proofs.key_max_length)';
+const maxKeyLengthOptionName = '(proofs.key_length)';
 const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName, literal) => {
     if (literal.length  == 0){
         return [];
@@ -146,7 +146,7 @@ const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName,
                 bf = ByteBuffer.wrap(str);
                 if (bf.limit > maxKeyLength){
                     throw new Error(str + ' is too long as a key to map');
-                }               
+                }
                 bf.prepend(Array(maxKeyLength-bf.limit).fill(0));
                 result.append(bf);
                 break;
@@ -174,7 +174,7 @@ const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName,
             case 'fixed64':
                 result.writeLong(Long.fromString(str,true));
                 break;
-            case 'uint32':           
+            case 'uint32':
             case 'fixed32':
                 result.writeUint32(parseInt(str));
                 break;
