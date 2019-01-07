@@ -87,7 +87,7 @@
                         },
                         {
                             "rule": "optional",
-                            "type": "FieldNums",
+                            "type": "bytes",
                             "name": "compact_name",
                             "id": 9,
                             "oneof": "property"
@@ -129,21 +129,6 @@
                             9
                         ]
                     }
-                },
-                {
-                    "name": "FieldNums",
-                    "syntax": "proto3",
-                    "fields": [
-                        {
-                            "rule": "repeated",
-                            "type": "uint64",
-                            "name": "components",
-                            "id": 1,
-                            "options": {
-                                "packed": true
-                            }
-                        }
-                    ]
                 }
             ],
             "isNamespace": true
@@ -331,6 +316,339 @@
                     ]
                 },
                 {
+                    "name": "SimpleMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleStringMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "string",
+                            "name": "value",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 32
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleStringMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "string",
+                            "name": "value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "NestedMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "SimpleMap",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedNestedMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "SaltedSimpleMap",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entry_value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SimpleEntry",
+                            "name": "entries",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 32,
+                                "(proofs.mapping_key)": "entry_key"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedSimpleEntry",
+                            "name": "entries",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entriesLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Entry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueC",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueC",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "Entries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "Entry",
+                            "name": "entries",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 32,
+                                "(proofs.mapping_key)": "entry_key"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedEntry",
+                            "name": "entries",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entriesLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "BytesKeyEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedBytesKeyEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "BytesKeyEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "BytesKeyEntry",
+                            "name": "entries",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 20,
+                                "(proofs.mapping_key)": "address"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedBytesKeyEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedBytesKeyEntry",
+                            "name": "entries",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entriesLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
                     "name": "TwoLevelRepeatedDocument",
                     "syntax": "proto3",
                     "fields": [
@@ -423,6 +741,85 @@
                             "type": "bytes",
                             "name": "valueCLength",
                             "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleMapDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "string",
+                            "name": "valueC",
+                            "id": 3,
+                            "options": {
+                                "(proofs.key_length)": 32
+                            }
+                        },
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "int32",
+                            "name": "valueD",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleMapDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "string",
+                            "name": "valueC",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueCLength",
+                            "id": 4
+                        },
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "int32",
+                            "name": "valueD",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueDLength",
+                            "id": 6
                         }
                     ]
                 },
@@ -780,6 +1177,12 @@
                             "type": "bytes",
                             "name": "value_not_ignored",
                             "id": 7
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueMap",
+                            "id": 10
                         }
                     ]
                 }

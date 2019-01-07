@@ -39,7 +39,7 @@
                 },
                 {
                     "rule": "optional",
-                    "type": "FieldNums",
+                    "type": "bytes",
                     "name": "compact_name",
                     "id": 9,
                     "oneof": "property"
@@ -81,21 +81,6 @@
                     9
                 ]
             }
-        },
-        {
-            "name": "FieldNums",
-            "syntax": "proto3",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "type": "uint64",
-                    "name": "components",
-                    "id": 1,
-                    "options": {
-                        "packed": true
-                    }
-                }
-            ]
         }
     ],
     "isNamespace": true

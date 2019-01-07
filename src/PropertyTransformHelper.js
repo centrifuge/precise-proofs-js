@@ -63,25 +63,31 @@ const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName,
     if (compacts.remaining() == 0){
         return '';
     }
-    let tagNumber = compacts.readUint32();
+    let tagNumber = compacts.readUint64();
     let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
         'id': tagNumber
     }, qualifiedMsgName, messageFieldsMapping);
     let literal = field['name'];
     if (field['rule'] === 'repeated') {
-        literal = literal + '[' + compacts.readUint32() + ']';
+        if (field['options'] != undefined){
+            let mappingKeyName = field['options'][`${mappingKeyOptionName}`];
+            if (mappingKeyName != undefined){
+                let keyLength = field['options'][`${keyLengthOptionName}`];
+                literal = literal + '[' + '0x' + compacts.toHex(compacts.offset, compacts.offset + keyLength) + ']';
+                compacts.offset = compacts.offset + keyLength;
+            }else{
+                throw new Error(`${keyLengthOptionName} should be defined because this repeated message is used as a map item`);
+            }
+        }else{
+            literal = literal + '[' + compacts.readUint64() + ']';
+        }
     } else if (field['rule'] === 'map'){
         let keyLength;
         switch (field['keytype']){
         case 'string':
-            keyLength = field['options'][`${maxKeyLengthOptionName}`];
+            keyLength = field['options'][`${keyLengthOptionName}`];
             literal =  literal + '[' + readString (keyLength, compacts) + ']';
-            break;
-        case 'bytes':
-            keyLength = field['options'][`${maxKeyLengthOptionName}`];
-            literal = literal + '[' + '0x' + compacts.toHex(compacts.offset, compacts.offset + keyLength) + ']';
-            compacts.offset = compacts.offset + keyLength;
             break;
         case 'int64':
         case 'sint64':
@@ -110,7 +116,8 @@ const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName,
     return literal;
 };
 
-const maxKeyLengthOptionName = '(proofs.key_length)';
+const keyLengthOptionName = '(proofs.key_length)';
+const mappingKeyOptionName = '(proofs.mapping_key)';
 const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName, literal) => {
     if (literal.length  == 0){
         return [];
@@ -125,42 +132,48 @@ const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName,
         'name': matched[0]
     }, qualifiedMsgName, messageFieldsMapping);
     let result = new ByteBuffer();
-    result.writeUint32(field['id']);
+    result.writeUint64(field['id']);
     if (remainString[0] == '[') {
         let indexOfClose = findEndBracket(remainString);
         let str = remainString.substring(1, indexOfClose);
         remainString = remainString.substring(indexOfClose + 1);
         if (field['rule'] === 'repeated') {
-            if (str.match(/^[0-9]+$/)) {
-                result.writeUint32(parseInt(str));
-            } else {
-                throw new Error(str + ' is not a valid index for repeated item');
+            if (field['options'] != undefined){
+                let mappingKeyName = field['options'][`${mappingKeyOptionName}`];
+                if (mappingKeyName != undefined){
+                    let keyLength = field['options'][`${keyLengthOptionName}`];
+                    if(str.length != keyLength*2 + 2){
+                        throw new Error(str + ' length is invalid');
+                    }
+                    if (str.match(/^0x/)){
+                        str = str.substring(2);
+                    }else{
+                        throw new Error(str + ' should start with 0x');
+                    }
+                    result.append(ByteBuffer.fromHex(str));
+                }else{
+                    throw new Error(`${keyLengthOptionName} should be defined because this repeated message is used as a map item`);
+                }
+            }else{
+                if (str.match(/^[0-9]+$/)) {
+                    result.writeUint64(parseInt(str));
+                } else {
+                    throw new Error(str + ' is not a valid index for repeated item');
+                }
             }
         }
         else if (field['rule'] === 'map'){
-            let maxKeyLength;
+            let keyLength;
             let bf;
             switch (field['keytype']){
             case 'string':
-                maxKeyLength = field['options'][`${maxKeyLengthOptionName}`];
+                keyLength = field['options'][`${keyLengthOptionName}`];
                 bf = ByteBuffer.wrap(str);
-                if (bf.limit > maxKeyLength){
+                if (bf.limit > keyLength){
                     throw new Error(str + ' is too long as a key to map');
                 }
-                bf.prepend(Array(maxKeyLength-bf.limit).fill(0));
+                bf.prepend(Array(keyLength-bf.limit).fill(0));
                 result.append(bf);
-                break;
-            case 'bytes':
-                maxKeyLength = field['options'][`${maxKeyLengthOptionName}`];
-                if(str.length != maxKeyLength*2 + 2){
-                    throw new Error(str + ' length is invalid');
-                }
-                if (str.match(/^0x/)){
-                    str = str.substring(2);
-                }else{
-                    throw new Error(str + ' should start with 0x');
-                }
-                result.append(ByteBuffer.fromHex(str));
                 break;
             case 'int64':
             case 'sint64':
