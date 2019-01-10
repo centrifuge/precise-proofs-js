@@ -63,7 +63,7 @@ const doCompactPropertyLiteralMapping = (messageFieldsMapping, msgName, pkgName,
     if (compacts.remaining() == 0){
         return '';
     }
-    let tagNumber = compacts.readUint64();
+    let tagNumber = compacts.readUint32();
     let qualifiedMsgName = getQualifiedMsgName(msgName, pkgName);
     let field = getField({
         'id': tagNumber
@@ -132,7 +132,7 @@ const doLiteralCompactPropertyMapping = (messageFieldsMapping, msgName, pkgName,
         'name': matched[0]
     }, qualifiedMsgName, messageFieldsMapping);
     let result = new ByteBuffer();
-    result.writeUint64(field['id']);
+    result.writeUint32(field['id']);
     if (remainString[0] == '[') {
         let indexOfClose = findEndBracket(remainString);
         let str = remainString.substring(1, indexOfClose);
