@@ -1,0 +1,325 @@
+{
+    "package": null,
+    "syntax": "proto2",
+    "messages": [
+        {
+            "name": "google",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "protobuf",
+                    "fields": [],
+                    "syntax": "proto2",
+                    "options": {
+                        "csharp_namespace": "Google.Protobuf.WellKnownTypes",
+                        "cc_enable_arenas": true,
+                        "go_package": "github.com/golang/protobuf/ptypes/timestamp",
+                        "java_package": "com.google.protobuf",
+                        "java_outer_classname": "TimestampProto",
+                        "java_multiple_files": true,
+                        "objc_class_prefix": "GPB"
+                    },
+                    "messages": [
+                        {
+                            "name": "Timestamp",
+                            "syntax": "proto3",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "type": "int64",
+                                    "name": "seconds",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "int32",
+                                    "name": "nanos",
+                                    "id": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "isNamespace": true
+                }
+            ],
+            "isNamespace": true
+        },
+        {
+            "name": "proofs",
+            "fields": [],
+            "syntax": "proto2",
+            "options": {
+                "go_package": "proofspb",
+                "java_multiple_files": true,
+                "java_outer_classname": "ProofProto",
+                "java_package": "com.proofs"
+            },
+            "messages": [
+                {
+                    "name": "MerkleHash",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "left",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "right",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Proof",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "readable_name",
+                            "id": 7,
+                            "oneof": "property"
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "FieldNums",
+                            "name": "compact_name",
+                            "id": 9,
+                            "oneof": "property"
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "value",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "salt",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "hash",
+                            "id": 6
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "MerkleHash",
+                            "name": "hashes",
+                            "id": 4
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "bytes",
+                            "name": "sorted_hashes",
+                            "id": 5
+                        }
+                    ],
+                    "oneofs": {
+                        "property": [
+                            7,
+                            9
+                        ]
+                    }
+                },
+                {
+                    "name": "FieldNums",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "uint64",
+                            "name": "components",
+                            "id": 1,
+                            "options": {
+                                "packed": true
+                            }
+                        }
+                    ]
+                }
+            ],
+            "isNamespace": true
+        },
+        {
+            "name": "other",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "other",
+                    "fields": [],
+                    "syntax": "proto2",
+                    "messages": [
+                        {
+                            "name": "Embedded",
+                            "syntax": "proto3",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "type": "string",
+                                    "name": "name",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "bytes",
+                                    "name": "value",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "google.protobuf.Timestamp",
+                                    "name": "stamp",
+                                    "id": 4
+                                }
+                            ]
+                        }
+                    ],
+                    "isNamespace": true
+                }
+            ],
+            "isNamespace": true
+        },
+        {
+            "name": "test",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "ItemCent",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "attribute",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int32",
+                            "name": "cents",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "other.other.Embedded",
+                            "name": "value",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "Item",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "name",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "description",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int32",
+                            "name": "numbers",
+                            "id": 3
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "ItemCent",
+                            "name": "cents",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "Items",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "name",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "Item",
+                            "name": "items",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Total",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "name",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "Items",
+                            "name": "items",
+                            "id": 2
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "string",
+                            "name": "itemMap",
+                            "id": 3,
+                            "options": {
+                                "(proofs.key_length)": 8
+                            }
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "bytes",
+                            "name": "itemMap2",
+                            "id": 4,
+                            "options": {
+                                "(proofs.key_length)": 8
+                            }
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "uint64",
+                            "name": "itemMap3",
+                            "id": 5
+                        },
+                        {
+                            "rule": "map",
+                            "type": "Items",
+                            "keytype": "int64",
+                            "name": "itemMap4",
+                            "id": 6
+                        }
+                    ]
+                }
+            ],
+            "isNamespace": true
+        }
+    ],
+    "isNamespace": true
+}

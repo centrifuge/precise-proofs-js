@@ -1,0 +1,1194 @@
+{
+    "package": null,
+    "syntax": "proto2",
+    "messages": [
+        {
+            "name": "google",
+            "fields": [],
+            "syntax": "proto2",
+            "messages": [
+                {
+                    "name": "protobuf",
+                    "fields": [],
+                    "syntax": "proto2",
+                    "options": {
+                        "csharp_namespace": "Google.Protobuf.WellKnownTypes",
+                        "cc_enable_arenas": true,
+                        "go_package": "github.com/golang/protobuf/ptypes/timestamp",
+                        "java_package": "com.google.protobuf",
+                        "java_outer_classname": "TimestampProto",
+                        "java_multiple_files": true,
+                        "objc_class_prefix": "GPB"
+                    },
+                    "messages": [
+                        {
+                            "name": "Timestamp",
+                            "syntax": "proto3",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "type": "int64",
+                                    "name": "seconds",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "type": "int32",
+                                    "name": "nanos",
+                                    "id": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "isNamespace": true
+                }
+            ],
+            "isNamespace": true
+        },
+        {
+            "name": "proofs",
+            "fields": [],
+            "syntax": "proto2",
+            "options": {
+                "go_package": "proofspb",
+                "java_multiple_files": true,
+                "java_outer_classname": "ProofProto",
+                "java_package": "com.proofs"
+            },
+            "messages": [
+                {
+                    "name": "MerkleHash",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "left",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "right",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Proof",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "readable_name",
+                            "id": 7,
+                            "oneof": "property"
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "compact_name",
+                            "id": 9,
+                            "oneof": "property"
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "value",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "salt",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "hash",
+                            "id": 6
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "MerkleHash",
+                            "name": "hashes",
+                            "id": 4
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "bytes",
+                            "name": "sorted_hashes",
+                            "id": 5
+                        }
+                    ],
+                    "oneofs": {
+                        "property": [
+                            7,
+                            9
+                        ]
+                    }
+                }
+            ],
+            "isNamespace": true
+        },
+        {
+            "name": "documents",
+            "fields": [],
+            "syntax": "proto2",
+            "options": {
+                "go_package": "documentspb",
+                "java_multiple_files": true,
+                "java_outer_classname": "ExampleProto",
+                "java_package": "com.documents"
+            },
+            "messages": [
+                {
+                    "name": "ExampleDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value1",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value2",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value_bytes1",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "ValueCamelCased",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value_not_ignored",
+                            "id": 7,
+                            "options": {
+                                "(proofs.exclude_from_tree)": false
+                            }
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value_ignored",
+                            "id": 8,
+                            "options": {
+                                "(proofs.exclude_from_tree)": true
+                            }
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value_not_hashed",
+                            "id": 9,
+                            "options": {
+                                "(proofs.hashed_field)": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "AllFieldTypes",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "string_value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "google.protobuf.Timestamp",
+                            "name": "time_stamp_value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "AllFieldTypesSalts",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "string_value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "time_stamp_value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleItem",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleItem",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "RepeatedItem",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SimpleItem",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedRepeatedItem",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedSimpleItem",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueALength",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleStringMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "string",
+                            "name": "value",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 32
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleStringMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "string",
+                            "name": "value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "NestedMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "SimpleMap",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedNestedMap",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "map",
+                            "type": "SaltedSimpleMap",
+                            "keytype": "int32",
+                            "name": "value",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entry_value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SimpleEntry",
+                            "name": "entries",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 32,
+                                "(proofs.mapping_key)": "entry_key"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedSimpleEntry",
+                            "name": "entries",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entriesLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Entry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueC",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "entry_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueC",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "Entries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "Entry",
+                            "name": "entries",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 32,
+                                "(proofs.mapping_key)": "entry_key"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedEntry",
+                            "name": "entries",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entriesLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "BytesKeyEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedBytesKeyEntry",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "BytesKeyEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "BytesKeyEntry",
+                            "name": "entries",
+                            "id": 1,
+                            "options": {
+                                "(proofs.key_length)": 20,
+                                "(proofs.mapping_key)": "address"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedBytesKeyEntries",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedBytesKeyEntry",
+                            "name": "entries",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "entriesLength",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "TwoLevelRepeatedDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "RepeatedItem",
+                            "name": "valueB",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedTwoLevelRepeatedDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedRepeatedItem",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueBLength",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleRepeatedDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "string",
+                            "name": "valueC",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleRepeatedDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "bytes",
+                            "name": "valueC",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueCLength",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SimpleMapDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "string",
+                            "name": "valueC",
+                            "id": 3,
+                            "options": {
+                                "(proofs.key_length)": 32
+                            }
+                        },
+                        {
+                            "rule": "map",
+                            "type": "string",
+                            "keytype": "int32",
+                            "name": "valueD",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedSimpleMapDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "string",
+                            "name": "valueC",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueCLength",
+                            "id": 4
+                        },
+                        {
+                            "rule": "map",
+                            "type": "bytes",
+                            "keytype": "int32",
+                            "name": "valueD",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueDLength",
+                            "id": 6
+                        }
+                    ]
+                },
+                {
+                    "name": "TwoLevelItem",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "SimpleItem",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedTwoLevelItem",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "SaltedSimpleItem",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "NestedRepeatedDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "SimpleItem",
+                            "name": "valueC",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "TwoLevelItem",
+                            "name": "valueD",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedNestedRepeatedDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "type": "SaltedSimpleItem",
+                            "name": "valueC",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueCLength",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "SaltedTwoLevelItem",
+                            "name": "valueD",
+                            "id": 5
+                        }
+                    ]
+                },
+                {
+                    "name": "InvalidHashedFieldDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "string",
+                            "name": "value",
+                            "id": 1,
+                            "options": {
+                                "(proofs.hashed_field)": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "LongDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value0",
+                            "id": 16
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value1",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value2",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value3",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value4",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value5",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value6",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value7",
+                            "id": 7
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value8",
+                            "id": 8
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "value9",
+                            "id": 9
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueA",
+                            "id": 10
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueB",
+                            "id": 11
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueC",
+                            "id": 12
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueD",
+                            "id": 13
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "int64",
+                            "name": "valueE",
+                            "id": 14
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedLongDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value0",
+                            "id": 16
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value1",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value2",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value3",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value4",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value5",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value6",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value7",
+                            "id": 7
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value8",
+                            "id": 8
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value9",
+                            "id": 9
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 10
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 11
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueC",
+                            "id": 12
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueD",
+                            "id": 13
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueE",
+                            "id": 14
+                        }
+                    ]
+                },
+                {
+                    "name": "SaltedExampleDocument",
+                    "syntax": "proto3",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueA",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueB",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value1",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value2",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value_bytes1",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "ValueCamelCased",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "value_not_ignored",
+                            "id": 7
+                        },
+                        {
+                            "rule": "optional",
+                            "type": "bytes",
+                            "name": "valueMap",
+                            "id": 10
+                        }
+                    ]
+                }
+            ],
+            "isNamespace": true
+        }
+    ],
+    "isNamespace": true
+}
